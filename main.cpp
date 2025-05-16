@@ -1,6 +1,9 @@
-#define NOMINMAX
+//cl .\main.cpp libs\sqlite3.c / Ilibs / Fe:main.exe / EHsc
+//cl main.cpp user.cpp libs\sqlite3.c / Ilibs / Fe:main.exe / EHsc; .\main.exe
 #include <iostream>
 #include <string>
+#include "user.h"
+#include "helpers/terminal.h"
 
 using namespace std;
 
@@ -10,67 +13,72 @@ int isAdmin = 0;
 int isSuperAdmin = 0;
 int isGuest = 0;
 char charInput;
+bool clrScr = false;
+string msgNoti = "";
+string *ptrNoti = &msgNoti;
 
-
-int homePage() {
+int homePage(bool clear = false) {
+	cin.clear();
 	char ch;
-	//cout << "\033[2J\033[1;1H";
-	cout << "=============================\n";
+	if (clear)
+	{
+		ClearScreen();
+	}
+	if (*ptrNoti != "") {
+        printLine();
+        cout << *ptrNoti;
+//        printLine();
+	}
+	printLine();
 	cout << "He thong quan ly diem thuong! \n";
 	cout << "1. Dang nhap \n";
 	cout << "2. Dang ky \n";
 	cout << "3. Quen mat khau \n";
 	cout << "4. Thoat \n";
-	cout << "=============================\n";
+	printLine();
 
 	cout << "Vui long nhap so ban muon: \n";
 	cin >> ch;
-	cout << "\n;;;;;;;;;;;;;;;;;;;;;;;;";
+	//cin.ignore(1000, '\n');
 	if (!isdigit(ch))
 	{
 		cout << "Khong phai so";
-		return false;
+		ch = false;
 		// In ra thong bao loi khi nhap vao ki tu khong phai so
 	}
-	else
-	{
-		return ch;
-	}
-}
 
-int register() {
-	char username, password;
-	cout << 'Nhap ten tai khoan: \n';
-	cin >> username;
-	cout << 'Nhap mat khau: \n';
+	return ch;
 }
 
 
 int main() {
+	User user;
 	bool closeApp = false;
-	while (true) {
-		charInput = homePage();
-		cout << charInput;
-		if (charInput)
-		{
-			break;
-		}
-	}
-	cout << "Xuong day";
+	charInput = homePage(clrScr);
+	cout << charInput;
+	cout << "\nBen tren la charInput\n";
 	switch (charInput)
 	{
 	case '1':
 		cout << "Nhap 1";
 		break;
 	case '2':
-		cout << "Nhap 2";
-		//register();
-		//return main();
+		cout << "Nhap 2\n";
+		int rrrr;
+		rrrr = user.registerAccount(ptrNoti);
+		clrScr = true;
+		return main();
 	case '3':
 		return main();
+	case '4':
+		return 0;
 	default:
+		printLine();
+		cout << "Thao tac khong ton tai, vui long nhap lai";
+		printLine();
+		return main();
 		break;
 	}
 	return 0;
-		
+
 }
